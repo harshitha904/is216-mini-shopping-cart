@@ -1,16 +1,27 @@
 <script setup>
 
 // TODO: Declare props (input)
+const props = defineProps(['items'])
 
 
 // TODO: Declare Emits (output) 
-// an 'addcart' event to notify the parent component when items are added
+// an 'addcart' custom event to notify the parent component when items are added
+const emit = defineEmits(['addcart'])
 
 
 // TODO: Handle button click to add selected items to the cart
 function doClick() {
    
     // add code 
+    let itemsToAdd = []
+    for (let item of props.items) {
+        if (item.quantity>0) {
+            itemsToAdd.push(item)
+        }
+    }
+
+    //this creates custom event addcart
+    emit("addcart", itemsToAdd)
 
 }
 </script>
@@ -29,16 +40,16 @@ function doClick() {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td> item name </td>
-                        <td>$ item price </td>
+                    <tr v-for = "item in items">
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.price }}</td>
                         <td>
                             <!-- Input for selecting item quantity -->
-                            <input type="number" min="0" style="width:50px;">
+                            <input type="number" min="0" style="width:50px;" v-model="item.quantity">
                         </td>
                         <td>
                             <!-- Display subtotal for the item -->
-                            $ subtotal
+                            $ {{ item.price * item.quantity }}
                         </td>
                     </tr>
                 </tbody>
